@@ -15,7 +15,7 @@ export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
         assert.strictEqual(
           actual,
           count,
-          `Expected ${count} calls, but received ${actual}`,
+          `Expected ${count.toString()} calls, but received ${actual.toString()}`,
         );
       } else {
         throw new TypeError(
@@ -29,15 +29,14 @@ export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
         const { calls } = fn.mock;
         const match = calls.some((_call) => {
           if (_call.arguments.length !== values.length) return false;
-          try {
-            return values.every(
-              (value, index) =>
-                assert.deepStrictEqual(_call.arguments[index], value) ===
-                undefined,
-            );
-          } catch {
-            return false;
-          }
+          return values.every((value, index) => {
+            try {
+              assert.deepStrictEqual(_call.arguments[index], value);
+              return true;
+            } catch {
+              return false;
+            }
+          });
         });
         assert.ok(
           match,
@@ -86,7 +85,7 @@ export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
             const actual = fn.mock.calls.length;
             assert(
               actual === 0,
-              `Expected mock not to have been called, but it was called ${actual} time(s)`,
+              `Expected mock not to have been called, but it was called ${actual.toString()} time(s)`,
             );
           } else {
             throw new TypeError(

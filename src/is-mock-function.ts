@@ -1,25 +1,16 @@
 import type { Mock } from "node:test";
 import type { UnknownFunction } from "./types";
-
-interface MockInternal {
-  mock: {
-    calls: Array<{ arguments: unknown[] }>;
-  };
-}
+import { isFunction } from "./utils/is-function.ts";
 
 export function isMockFunction<F extends UnknownFunction>(
   fn: unknown,
 ): fn is Mock<F> {
-  if (typeof fn !== "function" || fn === null) {
-    return false;
-  }
-
-  const candidate = fn as unknown as MockInternal;
-
   return (
-    candidate.mock !== undefined &&
-    candidate.mock !== null &&
-    typeof candidate.mock === "object" &&
-    Array.isArray(candidate.mock.calls)
+    isFunction(fn) &&
+    "mock" in fn &&
+    typeof fn.mock === "object" &&
+    fn.mock !== null &&
+    "calls" in fn.mock &&
+    Array.isArray(fn.mock.calls)
   );
 }

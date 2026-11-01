@@ -14,11 +14,13 @@ describe("isFunction", () => {
       expect(isFunction(fn)).toBe(true);
     });
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     it("async function", async () => {
       const fn = async function () {};
       expect(isFunction(fn)).toBe(true);
     });
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     it("async arrow function", async () => {
       const fn = async () => {};
       expect(isFunction(fn)).toBe(true);
@@ -30,15 +32,19 @@ describe("isFunction", () => {
     });
 
     it("class constructor", () => {
-      class Foo {}
+      class Foo {
+        bar = () => {
+          return "hello";
+        };
+      }
       expect(isFunction(Foo)).toBe(true);
     });
 
     it("class method", () => {
       class Foo {
-        bar() {
+        bar = () => {
           return "hello";
-        }
+        };
       }
       expect(isFunction(new Foo().bar)).toBe(true);
     });
