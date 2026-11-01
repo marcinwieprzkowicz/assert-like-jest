@@ -1,13 +1,13 @@
 import type { Mock } from "node:test";
-import { isMockFunction } from "./is-mock-function";
-import { buildMockMatchers } from "./matchers/mocks";
-import { buildValueMatchers } from "./matchers/objects";
+import { isMockFunction } from "./is-mock-function.ts";
+import { buildMockMatchers } from "./matchers/mocks.ts";
+import { buildValueMatchers } from "./matchers/objects.ts";
 import type {
   LooseMockFunction,
   UnknownFunction,
   MockMatchers,
   ValueMatchers,
-} from "./types";
+} from "./types.ts";
 
 export function mocked<F extends UnknownFunction>(fn: unknown) {
   if (!isMockFunction<F>(fn)) {

@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { isMockFunction } from "../is-mock-function";
-import type { UnknownFunction } from "../types";
+import { isMockFunction } from "../is-mock-function.ts";
+import type { UnknownFunction } from "../types.ts";
 
 type ExpectedArguments<F extends UnknownFunction> = [
   ...Parameters<F>,

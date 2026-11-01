@@ -1,5 +1,5 @@
-import { buildMockMatchers } from "./matchers/mocks";
-import { buildValueMatchers } from "./matchers/objects";
+import { buildMockMatchers } from "./matchers/mocks.ts";
+import { buildValueMatchers } from "./matchers/objects.ts";
 
 export type UnknownFunction = (...args: any[]) => unknown;
 export type LooseMockFunction = (...args: unknown[]) => unknown;

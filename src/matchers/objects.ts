@@ -1,11 +1,16 @@
 import assert, { type AssertPredicate } from "node:assert";
-import _ from "lodash";
+import { isDeepStrictEqual } from "node:util";
+import { isFunction } from "../utils/is-function.ts";
 
 export function buildValueMatchers(actual: unknown) {
   return {
+    toBe(expected: unknown) {
+      assert.strictEqual(actual, expected);
+    },
+
     toEqual(expected: unknown) {
       assert.ok(
-        _.isEqual(actual, expected),
+        isDeepStrictEqual(actual, expected),
         `Expected ${JSON.stringify(actual)} to be deeply equal to ${JSON.stringify(expected)}`,
       );
     },
@@ -15,7 +20,7 @@ export function buildValueMatchers(actual: unknown) {
     },
 
     toThrow(error: AssertPredicate) {
-      if (!_.isFunction(actual)) {
+      if (!isFunction(actual)) {
         throw new TypeError("toThrow() expects a function");
       }
 
