@@ -23,10 +23,18 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "node --test --experimental-strip-types 'src/**/*.test.ts'"
+    "test": "concurrently 'npm run test:types' 'npm run test:static' 'npm run test:unit'",
+    "test:unit": "node --test --experimental-strip-types 'src/**/*.test.ts'",
+    "test:types": "tsc --noEmit",
+    "test:static": "eslint ./src"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@types/node": "26.6.6",
+    "concurrently": "10.0.6",
+    "eslint": "10.14.0",
+    "typescript-eslint": "8.72.1",
+    "globals": "17.14.0",
     "typescript": "6.0.3"
   }
 }
