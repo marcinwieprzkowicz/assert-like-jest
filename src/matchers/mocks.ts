@@ -29,18 +29,14 @@ export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
         const { calls } = fn.mock;
         const match = calls.some((_call) => {
           if (_call.arguments.length !== values.length) return false;
-          try {
-            return values.every((value, index) => {
-              try {
-                assert.deepStrictEqual(_call.arguments[index], value);
-                return true;
-              } catch {
-                return false;
-              }
-            });
-          } catch {
-            return false;
-          }
+          return values.every((value, index) => {
+            try {
+              assert.deepStrictEqual(_call.arguments[index], value);
+              return true;
+            } catch {
+              return false;
+            }
+          });
         });
         assert.ok(
           match,
