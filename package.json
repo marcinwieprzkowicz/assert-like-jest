@@ -1,7 +1,7 @@
 {
   "name": "assert-like-jest",
   "version": "1.0.0",
-  "description": "todo",
+  "description": "Jest-compatible test matchers using Node.js native modules — no dependencies.",
   "homepage": "https://github.com/marcinwieprzkowicz/assert-like-jest#readme",
   "bugs": {
     "url": "https://github.com/marcinwieprzkowicz/assert-like-jest/issues"
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/marcinwieprzkowicz/assert-like-jest.git"
   },
-  "license": "ISC",
+  "license": "MIT NON-AI",
   "author": "Marcin Wieprzkowicz",
   "type": "module",
   "main": "dist/assertions.js",
@@ -21,8 +21,13 @@
       "types": "./dist/assertions.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build:clean": "rm -rf ./dist",
+    "build:typescript": "tsc -p tsconfig.build.json",
+    "build": "npm run build:clean && npm run build:typescript",
     "test": "concurrently 'npm run test:types' 'npm run test:static' 'npm run test:unit'",
     "test:unit": "node --test --experimental-strip-types 'src/**/*.test.ts'",
     "test:types": "tsc --noEmit",
