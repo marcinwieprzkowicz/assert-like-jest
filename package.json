@@ -1,0 +1,36 @@
+{
+  "name": "assert-like-jest",
+  "version": "1.0.0",
+  "description": "todo",
+  "homepage": "https://github.com/marcinwieprzkowicz/assert-like-jest#readme",
+  "bugs": {
+    "url": "https://github.com/marcinwieprzkowicz/assert-like-jest/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcinwieprzkowicz/assert-like-jest.git"
+  },
+  "license": "ISC",
+  "author": "Marcin Wieprzkowicz",
+  "type": "module",
+  "main": "dist/assertions.js",
+  "types": "dist/assertions.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/assertions.js",
+      "types": "./dist/assertions.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.21",
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}
