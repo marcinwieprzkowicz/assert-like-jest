@@ -1,6 +1,6 @@
 {
   "name": "assert-like-jest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Jest-compatible test matchers using Node.js native modules — no dependencies.",
   "homepage": "https://github.com/marcinwieprzkowicz/assert-like-jest#readme",
   "bugs": {
