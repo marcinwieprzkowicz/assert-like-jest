@@ -59,6 +59,9 @@ export default defineConfig(
 
       // Floating promises: off (matchers are sync, async support is future work)
       "@typescript-eslint/no-floating-promises": "off",
+
+      // Allow Function type for matcher API compatibility (it's the idiomatic way to type class constructors)
+      "@typescript-eslint/no-unsafe-function-type": "off",
     },
   },
 );
