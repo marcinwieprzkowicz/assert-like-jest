@@ -37,11 +37,12 @@ export default defineConfig(
         },
       ],
 
-      // Unused vars: allow unused args after used ones; skip _-prefixed vars; allow rest siblings
+      // Unused vars: allow unused args after used ones; skip _-prefixed vars/args; allow rest siblings
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
           args: "after-used",
+          argsIgnorePattern: "^_",
           ignoreRestSiblings: true,
           varsIgnorePattern: "^_",
         },
@@ -59,8 +60,16 @@ export default defineConfig(
 
       // Floating promises: off (matchers are sync, async support is future work)
       "@typescript-eslint/no-floating-promises": "off",
-
-      // Allow Function type for matcher API compatibility (it's the idiomatic way to type class constructors)
+    },
+  },
+  {
+    // `Function` is the idiomatic way to type class constructors (toBeInstanceOf)
+    files: [
+      "src/types.ts",
+      "src/matchers/objects.ts",
+      "src/matchers/objects.test.ts",
+    ],
+    rules: {
       "@typescript-eslint/no-unsafe-function-type": "off",
     },
   },

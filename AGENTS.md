@@ -21,15 +21,17 @@ npm run test:static    # eslint ./src
 
 ```
 src/assertions.ts        # exports: expect(), mocked()
-src/matchers/objects.ts  # value matchers: toBe, toEqual, toStrictEqual, toThrow
-src/matchers/mocks.ts    # mock matchers: toHaveBeenCalledXxx, lastCall, not
+src/matchers/objects.ts  # value matchers: toBe, toEqual, toStrictEqual, toThrow + P0 (toBeNull, toBeDefined, toBeUndefined, toHaveLength, toContainEqual, toBeInstanceOf)
+src/matchers/mocks.ts    # mock matchers: toHaveBeenCalled, toHaveBeenCalledTimes, toHaveBeenCalledWith, toHaveBeenLastCalledWith, lastCall, not
 src/is-mock-function.ts  # runtime type guard for Node.js mock.fn() output
 src/types.ts             # shared type aliases (UnknownFunction, LooseMockFunction, etc.)
+src/utils/is-function.ts # tag-based function check (rejects function-like imposters)
+src/utils/format.ts      # safe failure-message formatting via util.inspect
 ```
 
-- `expect(value)` is typed with overloads: `Mock<F>` → `MockMatchers`, plain `unknown` → both `ValueMatchers` + `MockMatchers` (functions without `mock` property get the union), everything else → `ValueMatchers`.
-- `isMockFunction()` checks the runtime `mock.calls` array — matchers throw `TypeError` if the guard fails rather than silently crashing.
-- `.not` support is partial: mock matchers have `.not.toHaveBeenCalled()`. Value matchers do not yet support negation.
+- `expect(value)` is typed with overloads: `Mock<F>` → `MockMatchers<F> & ValueMatchers`, everything else → `MockMatchers<LooseMockFunction> & ValueMatchers` — a unified Jest-style surface where every input gets both matcher sets; mock matchers throw a clear `TypeError` when called on a non-mock.
+- `isMockFunction()` checks the runtime `mock.calls` array — matchers throw `TypeError` if the guard fails rather than silently crashing. The check reads `fn.mock` via property access (not the `in` operator): current Node.js serves `mock` through an exotic `[[Get]]` that `in` cannot see.
+- `.not` support is partial: P0 value matchers (`toBeNull`, `toBeDefined`, `toBeUndefined`, `toHaveLength`, `toContainEqual`, `toBeInstanceOf`) and `toHaveBeenCalled()` support negation. `toBe`, `toEqual`, `toStrictEqual`, and `toThrow` do not yet.
 
 ## Conventions & gotchas
 
@@ -39,6 +41,7 @@ src/types.ts             # shared type aliases (UnknownFunction, LooseMockFuncti
   - `@typescript-eslint/no-explicit-any` → `warn` (not error)
   - `@typescript-eslint/no-use-before-define` → `functions: false` (forward refs are common)
   - `@typescript-eslint/no-floating-promises` → `off` (matchers are sync)
-  - `args: "after-used"` (unused trailing params OK if earlier ones are used)
-- Test files use Node's native test runner with `describe`/`it` — the test runner provides these, no imports needed.
+  - `@typescript-eslint/no-unsafe-function-type` → `off` only for `types.ts`, `matchers/objects.ts`, and `matchers/objects.test.ts` (`Function` types constructor parameters)
+  - `args: "after-used"` with `argsIgnorePattern: "^_"` (unused trailing params OK; underscore-prefixed params skipped)
+- Test files use Node's native test runner with `describe`/`it` — both must be imported from `node:test` (they are not globals).
 - Output goes to `dist/` (in `.gitignore`); the package exports `dist/assertions.js` and `dist/assertions.d.ts`.

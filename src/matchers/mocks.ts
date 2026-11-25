@@ -1,5 +1,6 @@
 import assert from "node:assert";
 import { isMockFunction } from "../is-mock-function.ts";
+import { format } from "../utils/format.ts";
 import type { UnknownFunction } from "../types.ts";
 
 type ExpectedArguments<F extends UnknownFunction> = [
@@ -9,6 +10,18 @@ type ExpectedArguments<F extends UnknownFunction> = [
 
 export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
   return {
+    toHaveBeenCalled() {
+      if (isMockFunction<F>(fn)) {
+        const actual = fn.mock.calls.length;
+        assert(
+          actual > 0,
+          "Expected mock to have been called, but it was not",
+        );
+      } else {
+        throw new TypeError("toHaveBeenCalled() expects a Node.js mock function");
+      }
+    },
+
     toHaveBeenCalledTimes(count: number) {
       if (isMockFunction<F>(fn)) {
         const actual = fn.mock.calls.length;
@@ -40,7 +53,7 @@ export function buildMockMatchers<F extends UnknownFunction>(fn: unknown) {
         });
         assert.ok(
           match,
-          `Expected fn to have been called with ${JSON.stringify(values)}, but calls were: ${JSON.stringify(calls.map((c) => c.arguments))}`,
+          `Expected fn to have been called with ${format(values)}, but calls were: ${format(calls.map((c) => c.arguments))}`,
         );
       } else {
         throw new TypeError(

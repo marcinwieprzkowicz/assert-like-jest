@@ -33,10 +33,16 @@ expect(fn).toHaveBeenCalledWith(21);
 
 | Matcher | Description |
 | --- | --- |
-| `toEqual(expected)` | Deep equality (JSON-based comparison) |
+| `toEqual(expected)` | Deep structural equality (handles `BigInt` and cycles) |
 | `toStrictEqual(expected)` | Strict deep equality (exact types) |
 | `toBe(expected)` | Strict reference/value equality |
 | `toThrow(error?)` | Asserts a function throws, optionally matching an error pattern |
+| `toBeNull()` | Value is `null` |
+| `toBeUndefined()` | Value is `undefined` |
+| `toBeDefined()` | Value is not `undefined` |
+| `toHaveLength(n)` | Value's `length` is `n` (strings, arrays, array-like) |
+| `toContainEqual(item)` | Array contains a deeply equal element; string contains substring |
+| `toBeInstanceOf(Class)` | Value is an instance of `Class` |
 
 ### Mock Matchers
 
@@ -50,14 +56,14 @@ expect(fn).toHaveBeenCalledWith(21);
 
 ### Negation
 
-All matchers support `.not`:
+The P0 value matchers and `toHaveBeenCalled()` support `.not`:
 
 ```ts
-expect("world").not.toEqual("hello");
+expect(undefined).not.toBeDefined();
 expect(fn).not.toHaveBeenCalled();
 ```
 
-> **Note:** The `.not` negation property is currently a work-in-progress.
+> **Note:** `.not` for `toBe`, `toEqual`, `toStrictEqual`, and `toThrow` is not yet implemented.
 
 ## `mocked()` Helper
 
@@ -81,16 +87,18 @@ const safe = mocked(unsafe); // throws if not a mock
 Full type inference with overloads:
 
 ```ts
-// Mock function → mock matchers
+// Mock function → all matchers work
 const fn = mock.fn(() => "hello");
 expect(fn).toHaveBeenCalled();
+expect(fn).toBe(fn);
 
-// Regular function → value + mock matchers
+// Regular function → value matchers work; mock matchers throw a clear
+// TypeError at runtime because it is not a mock (as Jest does)
 const fn2 = () => {};
-expect(fn2).toHaveBeenCalled();
-expect(fn2).not.toHaveBeenCalled();
+expect(fn2).toEqual(fn2);
+// expect(fn2).toHaveBeenCalled(); // TypeError: toHaveBeenCalled() expects a Node.js mock function
 
-// Any other value → value matchers only
+// Any other value → value matchers; mock matchers behave the same way
 expect("data").toEqual("data");
 ```
 

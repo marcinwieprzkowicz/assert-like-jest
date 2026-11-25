@@ -3,8 +3,9 @@
 **Date:** 2026-11-24
 **Target:** Jest 30.5 (latest)
 
-> Summary: The `assert-like-jest` project currently implements **9** value matchers and **5** mock matchers,
-> all with full TypeScript support and `.not` negation. Full parity would still require ~25+
+> Summary: The `assert-like-jest` project currently implements **10** value matchers and **6** mock matchers,
+> all with full TypeScript support. The six P0 value matchers support `.not` negation; `.not` for `toBe`,
+> `toEqual`, `toStrictEqual`, and `toThrow` is still pending. Full parity would still require ~25+
 > additional matchers.
 
 ---
@@ -15,11 +16,13 @@
 | --------------------------- | ------------------------------------------------------ | ----- |
 | `toBeNull()`                | ✅ Checks `value === null`                             |
 | `toBeDefined()`             | ✅ Checks `value !== undefined`                        |
-| `toHaveLength(n)`           | ✅ Checks `value.length === n` for strings/arrays      |
+| `toBeUndefined()`           | ✅ Checks `value === undefined`                        |
+| `toHaveLength(n)`           | ✅ Checks `value.length === n` (strings, arrays, array-like objects) |
 | `toContainEqual(item)`      | ✅ Deep equality in arrays + substring in strings      |
 | `toBeInstanceOf(Class)`     | ✅ Validates class/constructor and checks `instanceof` |
 | `not.toBeNull()`            | ✅ Negation of `toBeNull`                              |
 | `not.toBeDefined()`         | ✅ Negation of `toBeDefined`                           |
+| `not.toBeUndefined()`       | ✅ Negation of `toBeUndefined`                         |
 | `not.toHaveLength(n)`       | ✅ Negation of `toHaveLength`                          |
 | `not.toContainEqual(item)`  | ✅ Negation of `toContainEqual`                        |
 | `not.toBeInstanceOf(Class)` | ✅ Negation of `toBeInstanceOf`                        |
@@ -47,7 +50,7 @@
 | ------------------------------------- | ---------- | ---------------------------------------- |
 | `.resolves`                           | Medium     | Unwrap promise resolutions               |
 | `.rejects`                            | Medium     | Unwrap promise rejections                |
-| `toHaveBeenCalledWith()`              | Medium     | Already have, but for non-mock functions |
+| `toHaveBeenCalledWith()`              | Medium     | Works for mock functions; non-mocks rejected with a clear TypeError |
 | `toHaveBeenNthCalledWith(n, ...args)` | Medium     | Nth call args check                      |
 | `toHaveReturnedTimes(n)`              | Medium     | Returned exactly n times                 |
 | `toHaveReturnedWith(value)`           | Medium     | Returned specific value                  |
@@ -98,9 +101,9 @@
 
 ## Implementation Status
 
-- **Value matchers:** 4 original + 5 P0 = 9 total implemented
-- **Mock matchers:** 4 implemented (`toHaveBeenCalledTimes`, `toHaveBeenCalledWith`, `toHaveBeenLastCalledWith`, `lastCall`, `not.toHaveBeenCalled()`)
+- **Value matchers:** 10 total implemented (4 original + 5 P0 + `toBeUndefined`)
+- **Mock matchers:** 6 implemented (`toHaveBeenCalled`, `toHaveBeenCalledTimes`, `toHaveBeenCalledWith`, `toHaveBeenLastCalledWith`, `lastCall`, `not.toHaveBeenCalled()`)
 - **Top-level helpers:** `mocked()` and `expect()` exported
-- **Type system:** Full type guards, overloads, and `.not` negation support
+- **Type system:** Full type guards, overloads, and `.not` negation support for P0 value matchers
 - **No external dependencies** — only `node:test` and `node:assert`
-- **Test coverage:** 65+ unit tests passing, ESLint clean, TypeScript strict mode
+- **Test coverage:** 98 unit tests passing, ESLint clean, TypeScript strict mode
